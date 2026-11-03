@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVIKAS Logistics · Executive Dashboard — October 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+  <header class="dash-header">
+    <div class="header-container">
+      <div class="brand-wrap">
+        <img src="mvload.png" alt="MVIKAS" class="brand-logo"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="brand-fallback" style="display:none">
+          <svg viewBox="0 0 40 40" width="36" height="36">
+            <rect width="40" height="40" rx="8" fill="#f58220" />
+            <path d="M10 28V12l5 10 5-10v16M25 12h6a4 4 0 010 8h-6v8" stroke="#fff" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="brand-divider"></div>
+      </div>
+      <div class="header-info">
+        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+        <span class="date-badge">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" />
+          </svg>
+          October 31, 2026
+        </span>
+        <span class="elapsed-badge">
+          <svg viewBox="0 0 36 36" width="18" height="18" class="prog-ring">
+            <path d="M18 2.0845a15.9155 15.9155 0 010 31.831 15.9155 15.9155 0 010-31.831" fill="none" stroke="#2a2a2a"
+              stroke-width="3" />
+            <path d="M18 2.0845a15.9155 15.9155 0 010 31.831 15.9155 15.9155 0 010-31.831" fill="none" stroke="#f58220"
+              stroke-width="3" stroke-dasharray="100,100" class="ring-fill" />
+          </svg>
+          Day 31/31
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-grid">
+        <div class="hero-stat">
+          <div class="hs-label">Open Shipments</div>
+          <div class="hs-val counter" id="hero-open" data-target="948">948</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-label">Orders Due Tomorrow</div>
+          <div class="hs-val counter" id="hero-due" data-target="123">123</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-label">Month Tonnage (T)</div>
+          <div class="hs-val"><span class="counter" id="hero-ton" data-target="920.92" data-decimals="2">920.92</span> T</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-label">Month Finance Achieved</div>
+          <div class="hs-val">₹<span class="counter" id="hero-finance" data-target="139.52" data-decimals="2">139.52</span>L</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash">
+
+    <!-- KPI Cards (8 Cards) -->
+    <section class="kpi-grid">
+      <div class="kpi anim-card" data-d="0">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Open</div>
+          <div class="kpi-val" id="kpi-open">948</div>
+          <div class="kpi-sub">Active pipeline</div>
+        </div>
+      </div>
+
+      <div class="kpi anim-card" data-d="1">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 3v18h18" />
+            <path d="M18 17V9M13 17V5M8 17v-3" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Daily Avg Tonnage</div>
+          <div class="kpi-val" id="kpi-daily-avg">46.05 T/day</div>
+          <div class="kpi-sub">920.92 T ÷ 20 active days</div>
+        </div>
+      </div>
+
+      <div class="kpi kpi-accent anim-card" data-d="2">
+        <div class="kpi-icon accent-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Due Tomorrow Orders</div>
+          <div class="kpi-val" id="kpi-due">123</div>
+          <div class="kpi-sub" id="kpi-due-pct">13.0% of open</div>
+        </div>
+        <div class="pulse-dot"></div>
+      </div>
+
+      <div class="kpi anim-card" data-d="3">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+            <path d="M22 4L12 14.01l-3-3" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Booked Yesterday</div>
+          <div class="kpi-val" id="kpi-booked">239</div>
+          <div class="kpi-sub">October 31 dispatches</div>
+        </div>
+      </div>
+
+      <div class="kpi anim-card" data-d="4">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path
+              d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Yesterday Tonnage</div>
+          <div class="kpi-val" id="kpi-daily-ton">49.38 T</div>
+          <div class="kpi-sub">Across 11 clients</div>
+        </div>
+      </div>
+
+      <div class="kpi anim-card" data-d="5">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <path d="M14 2v6h6M16 13H8M16 17H8" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Month Tonnage</div>
+          <div class="kpi-val" id="kpi-month-ton">920.92 T</div>
+          <div class="kpi-sub">Target: 700.78 T (131.4%)</div>
+        </div>
+      </div>
+
+      <div class="kpi anim-card" data-d="6">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M16 8l-4 4-4-4" />
+            <path d="M12 12v6" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Financial Target</div>
+          <div class="kpi-val" id="kpi-target-finance">₹102.55 Lakhs</div>
+          <div class="kpi-sub">October target from sheet</div>
+        </div>
+      </div>
+
+      <div class="kpi anim-card" data-d="7">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Financial Achieved</div>
+          <div class="kpi-val" id="kpi-sales-finance">₹139.52 Lakhs</div>
+          <div class="kpi-sub">136.0% Achieved (from sheet)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" role="tab" onclick="switchTab('classify',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+        </svg><span>Classification</span>
+      </button>
+      <button class="tab" role="tab" onclick="switchTab('tonnage',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M18 20V10M12 20V4M6 20v-6" />
+        </svg><span>Tonnage (T)</span>
+      </button>
+      <button class="tab" role="tab" onclick="switchTab('daily',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <path d="M16 2v4M8 2v4M3 10h18" />
+        </svg><span>Daily Avg (T/day)</span>
+      </button>
+    </div>
+
+    <!-- Panel 1: Classification -->
+    <div id="tab-classify" class="panel active">
+      <div class="strip anim-up">
+        <div class="strip-item"><span class="sdot" style="background:#f58220"></span>In Transit<strong
+            id="strip-transit">825</strong></div>
+        <div class="strip-item"><span class="sdot" style="background:#eab308"></span>Due Tomorrow<strong
+            id="strip-due">123</strong></div>
+        <div class="strip-item"><span class="sdot" style="background:#10b981"></span>Booked Yesterday<strong
+            id="strip-booked">239</strong></div>
+        <div class="strip-item"><span class="sdot" style="background:#8b8b8b"></span>Total Open Pipeline<strong
+            id="strip-total">948</strong></div>
+      </div>
+
+      <div class="row2">
+        <div class="card anim-up">
+          <div class="card-head"><span class="stitle">Shipment Pipeline Status</span></div>
+          <div class="donut-wrap">
+            <div class="donut-legend">
+              <div class="dl-row"><span class="dl-dot" style="background:#f58220"></span>In Transit<strong
+                  id="dl-transit">825</strong></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#eab308"></span>Due Tomorrow<strong
+                  id="dl-due">123</strong></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#10b981"></span>Booked Yesterday<strong
+                  id="dl-booked">239</strong></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#8b8b8b"></span>Total Open<strong
+                  id="dl-total">948</strong></div>
+            </div>
+            <div class="chart-box" style="height:240px"><canvas id="statusDonut"></canvas></div>
+          </div>
+        </div>
+        <div class="card anim-up" style="animation-delay:.1s">
+          <div class="card-head"><span class="stitle">Due Tomorrow Orders — by Customer</span></div>
+          <div class="chart-box" style="height:280px"><canvas id="dueTmrChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="card anim-up">
+          <div class="card-head"><span class="stitle">Due Tomorrow — by Transporter</span></div>
+          <div class="chart-box" style="height:280px"><canvas id="transporterChart"></canvas></div>
+        </div>
+        <div class="card anim-up" style="animation-delay:.1s">
+          <div class="card-head"><span class="stitle">Booked Yesterday — by Customer</span></div>
+          <div class="chart-box" style="height:280px"><canvas id="bookedChart"></canvas></div>
+        </div>
+      </div>
+
+    </div><!-- /#tab-classify -->
+
+    <!-- Panel 2: Tonnage -->
+    <div id="tab-tonnage" class="panel">
+      <div class="card forecast-card anim-up">
+        <div class="card-head"><span class="stitle">Tonnage Target Achievement — October 2026</span></div>
+        <div class="forecast-grid">
+          <div class="fstat">
+            <div class="fstat-label">Total Target (T)</div>
+            <div class="fstat-val" id="forecast-ton-target">700.78 T</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-label">Achieved Till Date (T)</div>
+            <div class="fstat-val" id="forecast-ton-achieved">920.92 T</div>
+          </div>
+          <div class="fstat highlight">
+            <div class="fstat-label">Target Completion</div>
+            <div class="fstat-val" id="forecast-ton-pct">131.4%</div>
+          </div>
+        </div>
+        <div class="forecast-verdict">
+          <span class="fbadge good" id="forecast-badge">TARGET ACHIEVED</span>
+          <span id="forecast-verdict-text">Month-end performance: 920.92 T achieved against 700.78 T target (131.4% — Surplus +220.14 T).</span>
+        </div>
+        <div class="fbar-wrap">
+          <div class="fbar-track">
+            <div class="fbar-fill" id="forecast-bar-fill" style="width: 100%;"></div>
+            <div class="fbar-marker" id="forecast-bar-target-marker" style="left: 76.1%;"></div>
+          </div>
+          <div class="fbar-labels"><span>0 T</span><span id="forecast-bar-target-label">Target: 700.78 T (Achieved: 920.92 T)</span></div>
+        </div>
+        <p class="footnote" id="forecast-explain">
+          <strong style="color:var(--text)">October Overview:</strong> 31 elapsed days, 20 active dispatch days. Daily average: 46.05 T/day. All weights strictly in Tonnes (T).
+        </p>
+      </div>
+
+      <div class="card anim-up">
+        <div class="tonnage-head">
+          <span class="stitle" id="tonnage-panel-title" style="margin:0">Tonnage — % Completion</span>
+          <select id="tonnage-period-filter" onchange="setTonnagePeriod(this.value)">
+            <option value="full" selected>Full Month</option>
+            <option value="first10">First 10 Days</option>
+            <option value="mid10">Mid 10 Days</option>
+            <option value="last10">Last 10 Days</option>
+          </select>
+        </div>
+        <div class="legend" id="tonnage-legend">
+          <span><span class="legend-dot" style="background:#10b981"></span> Target Achieved (≥100%)</span>
+          <span><span class="legend-dot" style="background:#f58220"></span> On Track (70–99%)</span>
+          <span><span class="legend-dot" style="background:#8b8b8b"></span> Below Target (&lt;70%)</span>
+        </div>
+        <div class="client-row-header">
+          <span>Customer</span>
+          <span>KAM</span>
+          <span>Progress</span>
+          <span style="text-align:right">% Done</span>
+          <span style="text-align:right">Achieved / Target (T)</span>
+        </div>
+        <div id="tonnage-bars"></div>
+      </div>
+
+      <div class="card anim-up"><span class="stitle">Target vs Achieved (T) — Top Clients</span>
+        <div class="chart-box" style="height:360px"><canvas id="targetChart"></canvas></div>
+      </div>
+
+      <div class="card anim-up">
+        <span class="stitle">KAM Performance Summary</span>
+        <div class="forecast-grid" style="margin-top:14px">
+          <div class="fstat">
+            <div class="fstat-label">Total Target (T)</div>
+            <div class="fstat-val" id="kam-total-target">700.78 T</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-label">Total Achieved (T)</div>
+            <div class="fstat-val" id="kam-total-achieved">920.92 T</div>
+          </div>
+          <div class="fstat highlight">
+            <div class="fstat-label">Total % Completion</div>
+            <div class="fstat-val" id="kam-total-pct">131.4%</div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>KAM Name</th>
+                <th>Target (T)</th>
+                <th>Achieved (T)</th>
+                <th>% Done (Tonnage)</th>
+                <th>Fin. Target (₹)</th>
+                <th>Fin. Achieved (₹)</th>
+                <th>% Done (Finance)</th>
+              </tr>
+            </thead>
+            <tbody id="kam-summary-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Daily Avg -->
+    <div id="tab-daily" class="panel">
+      <div class="card anim-up">
+        <span class="stitle">Daily Average & Performance (Tonnage in T)</span>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>KAM</th>
+                <th>Target (T)</th>
+                <th>Achieved (T)</th>
+                <th>%</th>
+                <th>Days</th>
+                <th>Avg (T/day)</th>
+                <th>Remaining (T)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="daily-table-body"></tbody>
+          </table>
+        </div>
+        <p class="footnote">* Active dispatch pace calculated over 20 active dispatch days. All weights strictly in Tonnes (T).</p>
+      </div>
+      <div class="row2">
+        <div class="card anim-up"><span class="stitle">Avg T/Day (Top 10)</span>
+          <div class="chart-box" style="height:360px"><canvas id="avgDayChart"></canvas></div>
+        </div>
+        <div class="card anim-up" style="animation-delay:.1s"><span class="stitle">Yesterday Daily Tonnage (Top Clients)</span>
+          <div class="chart-box" style="height:360px"><canvas id="daysChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-brand"><svg width="18" height="18" viewBox="0 0 40 40">
+          <rect width="40" height="40" rx="6" fill="#f58220" />
+          <path d="M10 28V12l5 10 5-10v16" stroke="#0f0f0f" stroke-width="2.5" stroke-linecap="round" />
+        </svg>MVIKAS Logistics · October 2026</span>
+      <span class="footer-note">Updated from MVLOAD October.xlsx · Weights strictly in T · Finance data from sheets</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
